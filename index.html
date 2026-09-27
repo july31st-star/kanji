@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700;800&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=9" />
+  <link rel="stylesheet" href="styles.css?v=10" />
 </head>
 <body>
   <!-- Brush-ink filter applied to the kanji strokes -->
@@ -153,8 +153,12 @@
             </div>
           </section>
 
-          <!-- turning leaf for the page-flip effect -->
-          <div class="page-flip" aria-hidden="true"></div>
+          <!-- turning leaf for the page-flip effect: front carries a live
+               copy of the outgoing right page, back is blank paper -->
+          <div class="page-flip" aria-hidden="true">
+            <div class="pf-face pf-front"></div>
+            <div class="pf-face pf-back"></div>
+          </div>
         </div>
 
       <footer class="colophon">
@@ -164,7 +168,7 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5.0/dist/hanzi-writer.min.js"></script>
-  <script src="data.js?v=9"></script>
-  <script src="app.js?v=9"></script>
+  <script src="data.js?v=10"></script>
+  <script src="app.js?v=10"></script>
 </body>
 </html>

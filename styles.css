@@ -258,19 +258,13 @@ body {
 /* the turning page (right leaf pivoting on the spine) */
 .page-flip {
   position: absolute;
-  top: -8px;
-  bottom: -8px;
+  top: 0;
+  bottom: 0;
   left: 50%;
   width: 50%;
   transform-origin: left center;
   transform: rotateY(0deg);
   transform-style: preserve-3d;
-  background:
-    linear-gradient(90deg,
-      rgba(90, 65, 30, 0.16),
-      #f5eede 7%,
-      #fcf8ef 50%,
-      #efe7d3 100%);
   /* softly rounded, slightly organic page corners */
   border-radius: 2px 9px 13px 3px;
   opacity: 0;
@@ -278,12 +272,36 @@ body {
   z-index: 6;
   will-change: transform, opacity, box-shadow;
 }
-/* lighting/curl sheen + soft shadow that plays across the leaf */
-.page-flip::before {
+/* the two printed sides of the turning leaf */
+.pf-face {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  background:
+    linear-gradient(90deg,
+      rgba(90, 65, 30, 0.16),
+      #f5eede 6%,
+      #fcf8ef 46%,
+      #efe7d3 100%);
+}
+/* the front carries a live clone of the outgoing right page (via JS);
+   the clone keeps the page's own padding so it lines up with the spread */
+.pf-front > .page {
+  height: 100%;
+  box-sizing: border-box;
+}
+.pf-back {
+  transform: rotateY(180deg);
+}
+/* lighting/curl sheen that plays across whichever side is facing us */
+.pf-face::after {
   content: "";
   position: absolute;
   inset: 0;
-  border-radius: inherit;
+  pointer-events: none;
   background: linear-gradient(
     105deg,
     rgba(45, 30, 12, 0.24) 0%,
@@ -297,7 +315,7 @@ body {
 .page-flip.is-flipping {
   animation: page-turn 0.95s cubic-bezier(0.42, 0.03, 0.24, 1) forwards;
 }
-.page-flip.is-flipping::before {
+.page-flip.is-flipping .pf-face::after {
   animation: page-sheen 0.95s cubic-bezier(0.42, 0.03, 0.24, 1) forwards;
 }
 
@@ -327,7 +345,7 @@ body {
 }
 @media (prefers-reduced-motion: reduce) {
   .page-flip.is-flipping { animation: none; }
-  .page-flip.is-flipping::before { animation: none; }
+  .page-flip.is-flipping .pf-face::after { animation: none; }
 }
 /* center binding gutter shadow */
 .spread::before {

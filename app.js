@@ -5,6 +5,13 @@
   var SIZE = 300; // px of the writing square (matches CSS)
   var kanji = window.KANJI || [];
 
+  // romaji for the elegant caption line under each character
+  var ROMAJI = {
+    "木": "Ki", "日": "Hi", "月": "Tsuki", "山": "Yama", "川": "Kawa",
+    "田": "Ta", "口": "Kuchi", "人": "Hito", "火": "Hi", "水": "Mizu",
+    "目": "Me", "手": "Te", "雨": "Ame",
+  };
+
   var els = {
     picker: document.getElementById("picker"),
     target: document.getElementById("target"),
@@ -19,6 +26,7 @@
     assocImg: document.getElementById("assocImg"),
     assocEmoji: document.getElementById("assocEmoji"),
     assocMeaning: document.getElementById("assocMeaning"),
+    memCaption: document.getElementById("memCaption"),
     memMeaning: document.getElementById("memMeaning"),
     memOn: document.getElementById("memOn"),
     memKun: document.getElementById("memKun"),
@@ -74,6 +82,7 @@
       els.assocEmoji.style.display = "grid";
     }
     els.assocMeaning.textContent = k.meaning;
+    els.memCaption.textContent = (ROMAJI[k.char] || "") + " · " + k.meaning;
     els.memMeaning.textContent = k.meaning;
     els.memOn.textContent = k.on;
     els.memKun.textContent = k.kun;

@@ -2,17 +2,20 @@
    漢字 — an old writing book
    ============================================================ */
 :root {
-  --paper: #efe4c7;
-  --paper-2: #e8dcbb;
-  --paper-edge: #cbb98d;
-  --ink: #1b1710;
-  --ink-soft: #4a4133;
-  --seal: #9c3323;
-  --gold: #8a713f;
-  --line: rgba(120, 96, 52, 0.30);
-  --leather: #4a3320;
-  --leather-2: #33220f;
-  --desk: #241a12;
+  --paper: #f8f3e8;
+  --paper-2: #f0e9d8;
+  --paper-edge: #dccca9;
+  --ink: #14110c;
+  --ink-soft: #5b5142;
+  --seal: #b23a2b;
+  --gold: #a58c58;
+  --line: rgba(120, 96, 52, 0.22);
+  --cover: #dccbac;
+  --cover-2: #cbb78d;
+  --desk: #e9e2d4;
+  --blush: #e7c9c4;
+  --blush-2: #dcb9b3;
+  --wash: #cfbca7;
 }
 
 * { box-sizing: border-box; }
@@ -25,15 +28,15 @@ html, body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* A dark wooden desk the book rests on */
+/* A soft, airy surface the book rests on */
 body {
   min-height: 100vh;
   background-color: var(--desk);
   background-image:
-    radial-gradient(circle at 50% 0%, rgba(120, 90, 55, 0.28), transparent 60%),
-    repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.16) 0 2px, transparent 2px 26px),
-    linear-gradient(180deg, #2c2013, #1c130b);
-  padding: 40px 20px 60px;
+    radial-gradient(1200px 640px at 50% -12%, #f4eee2, transparent 62%),
+    radial-gradient(900px 900px at 100% 120%, rgba(220, 185, 179, 0.28), transparent 60%),
+    linear-gradient(180deg, #efe8da, #ddd3c0);
+  padding: 44px 20px 64px;
 }
 
 /* ============================================================
@@ -42,42 +45,41 @@ body {
 .book {
   max-width: 1000px;
   margin: 0 auto;
-  padding: 16px;
+  padding: 14px;
   border-radius: 8px;
   background:
-    linear-gradient(160deg, var(--leather), var(--leather-2));
+    linear-gradient(160deg, var(--cover), var(--cover-2));
   box-shadow:
-    0 2px 0 rgba(255, 220, 170, 0.10) inset,
-    0 0 0 1px rgba(0, 0, 0, 0.4),
-    0 30px 60px rgba(0, 0, 0, 0.55),
-    0 10px 20px rgba(0, 0, 0, 0.4);
+    0 1px 0 rgba(255, 255, 255, 0.4) inset,
+    0 0 0 1px rgba(120, 95, 55, 0.25),
+    0 26px 54px rgba(70, 52, 28, 0.28),
+    0 8px 18px rgba(70, 52, 28, 0.2);
   position: relative;
 }
 /* thin gilt line around the cover */
 .book::before {
   content: "";
   position: absolute;
-  inset: 8px;
-  border: 1px solid rgba(196, 164, 96, 0.45);
+  inset: 7px;
+  border: 1px solid rgba(180, 150, 92, 0.5);
   border-radius: 4px;
   pointer-events: none;
+  z-index: 3;
 }
 
 /* The paper block (both pages are one continuous sheet) */
 .book-inner {
   position: relative;
+  overflow: hidden;
   border-radius: 3px;
-  padding: 40px 46px 34px;
-  background-color: var(--paper);
+  padding: 44px 50px 34px;
+  background-color: #f9f4ea;
   background-image:
-    radial-gradient(circle at 15% 12%, rgba(160, 130, 80, 0.14), transparent 32%),
-    radial-gradient(circle at 88% 22%, rgba(160, 130, 80, 0.12), transparent 30%),
-    radial-gradient(circle at 78% 90%, rgba(150, 120, 70, 0.14), transparent 34%),
-    radial-gradient(circle at 8% 82%, rgba(150, 120, 70, 0.10), transparent 30%),
-    linear-gradient(180deg, rgba(255, 250, 235, 0.35), rgba(210, 188, 140, 0.15));
+    radial-gradient(circle at 82% 90%, rgba(150, 120, 70, 0.08), transparent 34%),
+    linear-gradient(180deg, rgba(255, 253, 246, 0.5), rgba(226, 210, 176, 0.12));
   box-shadow:
-    0 0 40px rgba(90, 60, 25, 0.18) inset,
-    0 1px 0 rgba(255, 255, 255, 0.4) inset;
+    0 0 40px rgba(120, 95, 55, 0.10) inset,
+    0 1px 0 rgba(255, 255, 255, 0.5) inset;
 }
 /* faint horizontal aging lines */
 .book-inner::after {
@@ -86,10 +88,81 @@ body {
   inset: 0;
   border-radius: inherit;
   pointer-events: none;
+  z-index: 2;
   background: repeating-linear-gradient(
-    0deg, transparent 0 27px, rgba(120, 96, 52, 0.045) 28px);
+    0deg, transparent 0 28px, rgba(120, 96, 52, 0.03) 29px);
   mix-blend-mode: multiply;
 }
+
+/* ============================================================
+   Decorative watercolour washes + botanical line art + seal
+   ============================================================ */
+.decor { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.book-inner > *:not(.decor):not(.seal-mark) { position: relative; z-index: 1; }
+
+.wash {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(34px);
+  opacity: 0.55;
+}
+.wash--tl {
+  top: -110px; left: -120px;
+  width: 380px; height: 320px;
+  background: radial-gradient(circle at 60% 60%, var(--blush-2), var(--blush) 45%, transparent 72%);
+}
+.wash--tl2 {
+  top: -40px; left: 120px;
+  width: 260px; height: 200px;
+  background: radial-gradient(circle at 50% 50%, var(--wash), transparent 70%);
+  opacity: 0.4;
+}
+.wash--br {
+  bottom: -130px; right: -120px;
+  width: 420px; height: 360px;
+  background: radial-gradient(circle at 40% 40%, var(--blush), var(--wash) 50%, transparent 74%);
+}
+.wash--br2 {
+  bottom: 40px; right: 160px;
+  width: 230px; height: 190px;
+  background: radial-gradient(circle at 50% 50%, var(--blush-2), transparent 70%);
+  opacity: 0.32;
+}
+
+.botanical {
+  position: absolute;
+  stroke: rgba(60, 50, 40, 0.32);
+  stroke-width: 1;
+  fill: none;
+  opacity: 0.8;
+}
+.botanical--tl { top: -6px; left: -12px; width: 236px; transform: rotate(26deg); }
+.botanical--br { bottom: -6px; right: -12px; width: 248px; transform: rotate(206deg); }
+
+/* red seal (hanko) */
+.seal-mark {
+  position: absolute;
+  bottom: 30px;
+  left: 40px;
+  width: 52px;
+  height: 52px;
+  border: 2.5px solid var(--seal);
+  border-radius: 4px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  place-items: center;
+  padding: 3px;
+  color: var(--seal);
+  font-family: "Shippori Mincho", serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  line-height: 1;
+  opacity: 0.9;
+  transform: rotate(-1deg);
+  box-shadow: 0 0 0 1px rgba(178, 58, 43, 0.15);
+  z-index: 1;
+}
+.seal-mark span { display: block; }
 
 /* ============================================================
    Running head (title)
@@ -319,7 +392,16 @@ body {
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.35);
 }
 
-.memory-story { padding: 20px 0; flex: 1; }
+.mem-caption {
+  margin: 14px 0 2px;
+  text-align: center;
+  font-size: 0.9rem;
+  letter-spacing: 0.14em;
+  color: var(--ink-soft);
+  text-transform: capitalize;
+}
+
+.memory-story { padding: 16px 0; flex: 1; }
 .memory-story h3 {
   margin: 0 0 12px;
   font-family: "Shippori Mincho", serif;

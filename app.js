@@ -28,8 +28,6 @@
     assocMeaning: document.getElementById("assocMeaning"),
     memCaption: document.getElementById("memCaption"),
     flip: document.querySelector(".page-flip"),
-    flipFront: document.querySelector(".pf-front"),
-    pageRight: document.querySelector(".page-right"),
     memMeaning: document.getElementById("memMeaning"),
     memOn: document.getElementById("memOn"),
     memKun: document.getElementById("memKun"),
@@ -70,19 +68,6 @@
     flipTimers = [];
   }
 
-  // Copy the current (outgoing) right page onto the turning leaf's front
-  // face so the printed page is visible as it flips away.
-  function captureFront() {
-    if (!els.flipFront || !els.pageRight) return;
-    var clone = els.pageRight.cloneNode(true);
-    // drop ids so getElementById keeps pointing at the live page
-    clone.querySelectorAll("[id]").forEach(function (n) {
-      n.removeAttribute("id");
-    });
-    els.flipFront.innerHTML = "";
-    els.flipFront.appendChild(clone);
-  }
-
   function select(i, skipFlip) {
     var tiles = els.picker.querySelectorAll(".tile");
     tiles.forEach(function (t, idx) {
@@ -107,22 +92,20 @@
       return;
     }
 
-    clearFlipTimers();
-
-    // Print the outgoing right page onto the leaf's front face, then reveal
-    // the NEW right page underneath immediately — the leaf's printed face
-    // hides it until the page has turned past edge-on.
-    captureFront();
-    applyRight();
+    // The leaf only turns the RIGHT (illustration) page, so the LEFT
+    // (writing practice) is never covered: update it right away so the new
+    // character's grid is visible for the whole flip.
+    applyLeft();
 
     // restart the page-turn animation
+    clearFlipTimers();
     els.flip.classList.remove("is-flipping");
     void els.flip.offsetWidth; // force reflow so the animation replays
     els.flip.classList.add("is-flipping");
 
-    // The writing grid on the left is swapped late, while the leaf's back
-    // is sweeping over the left half — so that change stays hidden too.
-    flipTimers.push(setTimeout(applyLeft, 720));
+    // Swap the illustration while the turning leaf is still covering the
+    // right page, so it's revealed as the leaf lifts away — never blank.
+    flipTimers.push(setTimeout(applyRight, 230));
 
     var done = function () {
       els.flip.classList.remove("is-flipping");

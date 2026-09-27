@@ -59,7 +59,6 @@
   }
 
   var flipTimers = [];
-  var flipEndHandler = null;
   var reduceMotion =
     window.matchMedia &&
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -90,39 +89,26 @@
     if (skipFlip || reduceMotion || !els.flip) {
       applyRight();
       applyLeft();
-      els.target.classList.remove("is-hidden");
       return;
     }
 
     // restart the page-turn animation
     clearFlipTimers();
-    if (flipEndHandler)
-      els.flip.removeEventListener("animationend", flipEndHandler);
-
-    // Clear the current strokes while the page turns; the writing square and
-    // guide lines stay put — only the character content fades away.
-    els.target.classList.add("is-hidden");
-
     els.flip.classList.remove("is-flipping");
     void els.flip.offsetWidth; // force reflow so the animation replays
     els.flip.classList.add("is-flipping");
 
-    // Swap the illustration while the turning leaf is still covering the
-    // right page, so it's revealed as the leaf lifts away — never blank.
-    flipTimers.push(setTimeout(applyRight, 230));
+    // Swap each side while the turning leaf is passing over it:
+    // the leaf covers the right half first (~35%), then sweeps to the
+    // left half (~78%), so the writing grid changes there — hidden.
+    flipTimers.push(setTimeout(applyRight, 330));
+    flipTimers.push(setTimeout(applyLeft, 720));
 
-    flipEndHandler = function () {
+    var done = function () {
       els.flip.classList.remove("is-flipping");
-      els.flip.removeEventListener("animationend", flipEndHandler);
-      flipEndHandler = null;
-      // The page has finished turning: load the new character and fade its
-      // strokes in.
-      applyLeft();
-      requestAnimationFrame(function () {
-        els.target.classList.remove("is-hidden");
-      });
+      els.flip.removeEventListener("animationend", done);
     };
-    els.flip.addEventListener("animationend", flipEndHandler);
+    els.flip.addEventListener("animationend", done);
   }
 
   function updateMemory(k) {

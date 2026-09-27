@@ -58,10 +58,15 @@
     });
   }
 
-  var flipTimer = null;
+  var flipTimers = [];
   var reduceMotion =
     window.matchMedia &&
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function clearFlipTimers() {
+    flipTimers.forEach(clearTimeout);
+    flipTimers = [];
+  }
 
   function select(i, skipFlip) {
     var tiles = els.picker.querySelectorAll(".tile");
@@ -69,26 +74,35 @@
       t.classList.toggle("is-active", idx === i);
     });
 
-    var apply = function () {
-      active = kanji[i];
-      total = active.strokes;
-      updateMemory(active);
-      loadWriter(active.char);
+    var k = kanji[i];
+    // right page (illustration, meaning, story) and left page (writing grid)
+    var applyRight = function () {
+      active = k;
+      updateMemory(k);
+    };
+    var applyLeft = function () {
+      active = k;
+      total = k.strokes;
+      loadWriter(k.char);
     };
 
     if (skipFlip || reduceMotion || !els.flip) {
-      apply();
+      applyRight();
+      applyLeft();
       return;
     }
 
     // restart the page-turn animation
+    clearFlipTimers();
     els.flip.classList.remove("is-flipping");
     void els.flip.offsetWidth; // force reflow so the animation replays
     els.flip.classList.add("is-flipping");
 
-    // swap the page contents while the leaf hides them
-    if (flipTimer) clearTimeout(flipTimer);
-    flipTimer = setTimeout(apply, 300);
+    // Swap each side while the turning leaf is passing over it:
+    // the leaf covers the right half first (~35%), then sweeps to the
+    // left half (~78%), so the writing grid changes there — hidden.
+    flipTimers.push(setTimeout(applyRight, 330));
+    flipTimers.push(setTimeout(applyLeft, 720));
 
     var done = function () {
       els.flip.classList.remove("is-flipping");

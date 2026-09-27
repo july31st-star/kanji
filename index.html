@@ -7,118 +7,98 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700;800&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css?v=2" />
 </head>
 <body>
-  <div class="page">
-    <!-- ===== Header ===== -->
-    <header class="masthead">
-      <div class="seal">書</div>
-      <div class="masthead-text">
-        <h1 class="title"><span class="jp">漢字を書く</span></h1>
-        <p class="subtitle">Kanji, one brushstroke at a time</p>
-      </div>
-      <div class="seal seal--red">道</div>
-    </header>
-
-    <!-- ===== Intro: why pictures help ===== -->
-    <section class="intro card paper">
-      <div class="intro-copy">
-        <h2>From picture to character</h2>
-        <p>
-          Every kanji began as a little drawing of the world. A tree grew into
-          <span class="ink-char">木</span>, a crescent moon into
-          <span class="ink-char">月</span>, an open mouth into
-          <span class="ink-char">口</span>. Learn the picture hidden in each
-          character and the strokes will stay with you.
-        </p>
-        <p class="intro-hint">
-          Pick a kanji below, then watch it drawn stroke&nbsp;by&nbsp;stroke on the
-          practice page.
-        </p>
-      </div>
-      <figure class="intro-figure">
-        <img src="assets/kanji-evolution.png" alt="Pictures evolving into the kanji for tree, moon and mouth" />
-        <figcaption>Picture → simplified → kanji</figcaption>
-      </figure>
-    </section>
-
-    <!-- ===== Character picker ===== -->
-    <section class="picker-wrap">
-      <h2 class="section-label">Choose a kanji</h2>
-      <div id="picker" class="picker"></div>
-    </section>
-
-    <!-- ===== Practice notebook ===== -->
-    <section class="notebook">
-      <!-- Writing page -->
-      <div class="writing-page paper">
-        <div class="genko">
-          <div id="grid" class="genko-grid">
-            <svg class="guide" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-              <line x1="50" y1="0" x2="50" y2="100" />
-              <line x1="0" y1="50" x2="100" y2="50" />
-              <line x1="0" y1="0" x2="100" y2="100" />
-              <line x1="100" y1="0" x2="0" y2="100" />
-            </svg>
-            <div id="target" class="target"></div>
-          </div>
+  <div class="book">
+    <div class="book-inner">
+      <!-- ===== Running head ===== -->
+      <header class="running-head">
+        <span class="rule"></span>
+        <div class="running-head-text">
+          <h1 class="title"><span class="jp">漢字を書く</span></h1>
+          <p class="subtitle">Kanji, one brushstroke at a time</p>
         </div>
+        <span class="rule"></span>
+      </header>
 
-        <div class="stroke-counter">
-          <span id="strokeNow">0</span>
-          <span class="slash">/</span>
-          <span id="strokeTotal">0</span>
-          <span class="counter-label">strokes</span>
-        </div>
+      <!-- ===== Character index ===== -->
+      <nav class="picker-wrap">
+        <h2 class="section-label">Choose a kanji</h2>
+        <div id="picker" class="picker"></div>
+      </nav>
 
-        <div class="controls">
-          <button id="btnPrev" class="btn" title="Previous stroke">◀ Back</button>
-          <button id="btnNext" class="btn btn--ink" title="Next stroke">Next stroke ▶</button>
-          <button id="btnPlay" class="btn" title="Animate the whole character">↻ Animate</button>
-          <button id="btnQuiz" class="btn" title="Trace it yourself">✎ Practice</button>
-          <button id="btnReset" class="btn btn--ghost" title="Clear the page">Clear</button>
-        </div>
-
-        <div class="speed">
-          <label for="speed">Slow</label>
-          <input id="speed" type="range" min="0.5" max="3" step="0.5" value="1" />
-          <label for="speed">Fast</label>
-        </div>
-      </div>
-
-      <!-- Memory card -->
-      <aside class="memory-card paper">
-        <div class="memory-head">
-          <div id="memEmoji" class="mem-emoji">🌳</div>
-          <div class="memory-title">
-            <div id="memMeaning" class="mem-meaning">tree</div>
-            <div class="mem-readings">
-              <span class="rk">On</span> <span id="memOn">モク・ボク</span>
-              <span class="dot">·</span>
-              <span class="rk">Kun</span> <span id="memKun">き・こ</span>
+      <!-- ===== Open-book spread ===== -->
+      <div class="spread">
+        <!-- Left page: the writing -->
+        <section class="page page-left">
+          <div class="genko">
+            <div id="grid" class="genko-grid">
+              <svg class="guide" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+                <line x1="50" y1="0" x2="50" y2="100" />
+                <line x1="0" y1="50" x2="100" y2="50" />
+                <line x1="0" y1="0" x2="100" y2="100" />
+                <line x1="100" y1="0" x2="0" y2="100" />
+              </svg>
+              <div id="target" class="target"></div>
             </div>
           </div>
-          <div id="memChar" class="mem-char">木</div>
-        </div>
-        <div class="memory-story">
-          <h3>Picture it</h3>
-          <p id="memStory">
-            A trunk standing tall with branches reaching up and roots into the
-            earth — one whole tree in four strokes.
-          </p>
-        </div>
-        <div class="memory-foot">
-          <span class="pill">Stroke order matters</span>
-          <span class="pill">Top → bottom, left → right</span>
-        </div>
-      </aside>
-    </section>
 
-    <footer class="footer">
-      <img src="assets/calligraphy-practice.png" alt="A hand practising Japanese calligraphy" />
-      <p>Take your time. Ink dries; muscle memory doesn't.</p>
-    </footer>
+          <div class="stroke-counter">
+            <span id="strokeNow">0</span>
+            <span class="slash">/</span>
+            <span id="strokeTotal">0</span>
+            <span class="counter-label">strokes</span>
+          </div>
+
+          <div class="controls">
+            <button id="btnPrev" class="btn" title="Previous stroke">◀ Back</button>
+            <button id="btnNext" class="btn btn--ink" title="Next stroke">Next stroke ▶</button>
+            <button id="btnPlay" class="btn" title="Animate the whole character">↻ Animate</button>
+            <button id="btnQuiz" class="btn" title="Trace it yourself">✎ Practice</button>
+            <button id="btnReset" class="btn btn--ghost" title="Clear the page">Clear</button>
+          </div>
+
+          <div class="speed">
+            <label for="speed">Slow</label>
+            <input id="speed" type="range" min="0.5" max="3" step="0.5" value="1" />
+            <label for="speed">Fast</label>
+          </div>
+        </section>
+
+        <!-- Right page: the meaning & memory -->
+        <section class="page page-right">
+          <div class="memory-head">
+            <div class="memory-title">
+              <div id="memMeaning" class="mem-meaning">tree</div>
+              <div class="mem-readings">
+                <span class="rk">On</span> <span id="memOn">モク・ボク</span>
+                <span class="dot">·</span>
+                <span class="rk">Kun</span> <span id="memKun">き・こ</span>
+              </div>
+            </div>
+            <div id="memChar" class="mem-char">木</div>
+          </div>
+
+          <div class="memory-story">
+            <h3><span id="memEmoji" class="mem-emoji">🌳</span> Picture it</h3>
+            <p id="memStory">
+              A trunk standing tall with branches reaching up and roots into the
+              earth — one whole tree in four strokes.
+            </p>
+          </div>
+
+          <div class="memory-foot">
+            <span class="pill">Stroke order matters</span>
+            <span class="pill">Top → bottom, left → right</span>
+          </div>
+        </section>
+      </div>
+
+      <footer class="colophon">
+        <p>Take your time. Ink dries; muscle memory doesn't.</p>
+      </footer>
+    </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5.0/dist/hanzi-writer.min.js"></script>

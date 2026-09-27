@@ -59,6 +59,7 @@
   }
 
   var flipTimers = [];
+  var flipEndHandler = null;
   var reduceMotion =
     window.matchMedia &&
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -89,16 +90,19 @@
     if (skipFlip || reduceMotion || !els.flip) {
       applyRight();
       applyLeft();
+      els.target.classList.remove("is-hidden");
       return;
     }
 
-    // The leaf only turns the RIGHT (illustration) page, so the LEFT
-    // (writing practice) is never covered: update it right away so the new
-    // character's grid is visible for the whole flip.
-    applyLeft();
-
     // restart the page-turn animation
     clearFlipTimers();
+    if (flipEndHandler)
+      els.flip.removeEventListener("animationend", flipEndHandler);
+
+    // Clear the current strokes while the page turns; the writing square and
+    // guide lines stay put — only the character content fades away.
+    els.target.classList.add("is-hidden");
+
     els.flip.classList.remove("is-flipping");
     void els.flip.offsetWidth; // force reflow so the animation replays
     els.flip.classList.add("is-flipping");
@@ -107,11 +111,18 @@
     // right page, so it's revealed as the leaf lifts away — never blank.
     flipTimers.push(setTimeout(applyRight, 230));
 
-    var done = function () {
+    flipEndHandler = function () {
       els.flip.classList.remove("is-flipping");
-      els.flip.removeEventListener("animationend", done);
+      els.flip.removeEventListener("animationend", flipEndHandler);
+      flipEndHandler = null;
+      // The page has finished turning: load the new character and fade its
+      // strokes in.
+      applyLeft();
+      requestAnimationFrame(function () {
+        els.target.classList.remove("is-hidden");
+      });
     };
-    els.flip.addEventListener("animationend", done);
+    els.flip.addEventListener("animationend", flipEndHandler);
   }
 
   function updateMemory(k) {

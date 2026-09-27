@@ -383,9 +383,14 @@ body {
 }
 .guide { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .guide line { stroke: rgba(120, 96, 52, 0.4); stroke-width: 0.5; stroke-dasharray: 3 3; }
-.target { position: absolute; inset: 0; }
+.target { position: absolute; inset: 0; transition: opacity 0.55s ease; }
+/* stroke content clears while the page turns, then fades in once it lands */
+.target.is-hidden { opacity: 0; transition: opacity 0.15s ease; }
 /* real brush-ink look on the drawn strokes */
 .target svg { filter: url(#brush); }
+@media (prefers-reduced-motion: reduce) {
+  .target, .target.is-hidden { transition: none; }
+}
 
 .stroke-counter { margin: 18px 0 12px; font-family: "Shippori Mincho", serif; color: var(--ink); }
 .stroke-counter #strokeNow { font-size: 1.9rem; font-weight: 700; }

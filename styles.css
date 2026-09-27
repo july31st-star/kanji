@@ -229,7 +229,9 @@ body {
 }
 .guide { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .guide line { stroke: rgba(120, 96, 52, 0.4); stroke-width: 0.5; stroke-dasharray: 3 3; }
-.target { position: absolute; inset: 0; filter: drop-shadow(0 0 0.5px rgba(24, 21, 16, 0.5)); }
+.target { position: absolute; inset: 0; }
+/* real brush-ink look on the drawn strokes */
+.target svg { filter: url(#brush); }
 
 .stroke-counter { margin: 18px 0 12px; font-family: "Shippori Mincho", serif; color: var(--ink); }
 .stroke-counter #strokeNow { font-size: 1.9rem; font-weight: 700; }
@@ -257,6 +259,36 @@ body {
 
 .speed { display: flex; align-items: center; gap: 10px; color: var(--ink-soft); font-style: italic; font-size: 0.92rem; }
 .speed input[type="range"] { accent-color: var(--seal); width: 140px; }
+
+/* ---------- right page: association illustration ---------- */
+.assoc {
+  margin: 0 0 20px;
+  text-align: center;
+}
+.assoc-img,
+.assoc-emoji {
+  width: 210px;
+  height: 210px;
+  margin: 0 auto;
+  border-radius: 6px;
+  background: #fbf6e7;
+  border: 1px solid var(--paper-edge);
+  box-shadow: 0 6px 16px rgba(70, 50, 20, 0.2);
+  object-fit: cover;
+}
+.assoc-emoji {
+  display: grid;
+  place-items: center;
+  font-size: 6rem;
+  line-height: 1;
+}
+.assoc figcaption {
+  margin-top: 10px;
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--gold);
+}
+.assoc figcaption span { text-transform: capitalize; }
 
 /* ---------- right page: meaning & memory ---------- */
 .memory-head {

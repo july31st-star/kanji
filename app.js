@@ -16,7 +16,9 @@
     btnPlay: document.getElementById("btnPlay"),
     btnQuiz: document.getElementById("btnQuiz"),
     btnReset: document.getElementById("btnReset"),
-    memEmoji: document.getElementById("memEmoji"),
+    assocImg: document.getElementById("assocImg"),
+    assocEmoji: document.getElementById("assocEmoji"),
+    assocMeaning: document.getElementById("assocMeaning"),
     memMeaning: document.getElementById("memMeaning"),
     memOn: document.getElementById("memOn"),
     memKun: document.getElementById("memKun"),
@@ -59,7 +61,19 @@
   }
 
   function updateMemory(k) {
-    els.memEmoji.textContent = k.emoji;
+    // association illustration: show the watercolor image if we have one,
+    // otherwise fall back to the emoji.
+    if (k.image) {
+      els.assocImg.src = k.image;
+      els.assocImg.alt = "Cute illustration hiding the kanji for " + k.meaning;
+      els.assocImg.hidden = false;
+      els.assocEmoji.style.display = "none";
+    } else {
+      els.assocImg.hidden = true;
+      els.assocEmoji.textContent = k.emoji;
+      els.assocEmoji.style.display = "grid";
+    }
+    els.assocMeaning.textContent = k.meaning;
     els.memMeaning.textContent = k.meaning;
     els.memOn.textContent = k.on;
     els.memKun.textContent = k.kun;

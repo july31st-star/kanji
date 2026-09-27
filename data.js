@@ -45,7 +45,7 @@ window.KANJI = [
   },
   {
     char: "口", meaning: "mouth", strokes: 3, emoji: "👄",
-    image: "assets/img/kuchi.png",
+    image: "assets/img/wc-kuchi.png",
     on: "コウ・ク", kun: "くち",
     story:
       "An open mouth, drawn as a simple square opening. Just three strokes — no bottom-left overlap.",

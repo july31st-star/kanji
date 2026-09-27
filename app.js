@@ -27,6 +27,7 @@
     assocEmoji: document.getElementById("assocEmoji"),
     assocMeaning: document.getElementById("assocMeaning"),
     memCaption: document.getElementById("memCaption"),
+    flip: document.querySelector(".page-flip"),
     memMeaning: document.getElementById("memMeaning"),
     memOn: document.getElementById("memOn"),
     memKun: document.getElementById("memKun"),
@@ -57,15 +58,43 @@
     });
   }
 
-  function select(i) {
+  var flipTimer = null;
+  var reduceMotion =
+    window.matchMedia &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function select(i, skipFlip) {
     var tiles = els.picker.querySelectorAll(".tile");
     tiles.forEach(function (t, idx) {
       t.classList.toggle("is-active", idx === i);
     });
-    active = kanji[i];
-    total = active.strokes;
-    updateMemory(active);
-    loadWriter(active.char);
+
+    var apply = function () {
+      active = kanji[i];
+      total = active.strokes;
+      updateMemory(active);
+      loadWriter(active.char);
+    };
+
+    if (skipFlip || reduceMotion || !els.flip) {
+      apply();
+      return;
+    }
+
+    // restart the page-turn animation
+    els.flip.classList.remove("is-flipping");
+    void els.flip.offsetWidth; // force reflow so the animation replays
+    els.flip.classList.add("is-flipping");
+
+    // swap the page contents while the leaf hides them
+    if (flipTimer) clearTimeout(flipTimer);
+    flipTimer = setTimeout(apply, 300);
+
+    var done = function () {
+      els.flip.classList.remove("is-flipping");
+      els.flip.removeEventListener("animationend", done);
+    };
+    els.flip.addEventListener("animationend", done);
   }
 
   function updateMemory(k) {
@@ -208,5 +237,5 @@
   });
 
   buildPicker();
-  select(0);
+  select(0, true);
 })();

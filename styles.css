@@ -251,6 +251,44 @@ body {
   position: relative;
   display: grid;
   grid-template-columns: 1fr 1fr;
+  perspective: 2200px;
+  perspective-origin: center;
+}
+
+/* the turning page (right leaf pivoting on the spine) */
+.page-flip {
+  position: absolute;
+  top: -8px;
+  bottom: -8px;
+  left: 50%;
+  width: 50%;
+  transform-origin: left center;
+  transform: rotateY(0deg);
+  transform-style: preserve-3d;
+  background:
+    linear-gradient(90deg,
+      rgba(90, 65, 30, 0.14),
+      #f6efdf 9%,
+      #fcf7ec 52%,
+      #f1e9d6 100%);
+  border-radius: 0 6px 6px 0;
+  box-shadow: -3px 0 20px rgba(70, 50, 20, 0.2);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 6;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+.page-flip.is-flipping {
+  animation: page-turn 0.72s cubic-bezier(0.36, 0.1, 0.3, 1) forwards;
+}
+@keyframes page-turn {
+  0%   { transform: rotateY(0deg);    opacity: 1; }
+  55%  { opacity: 1; }
+  100% { transform: rotateY(-172deg); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .page-flip.is-flipping { animation: none; }
 }
 /* center binding gutter shadow */
 .spread::before {

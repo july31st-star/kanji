@@ -490,9 +490,10 @@ body {
 .mem-readings .rk { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); }
 .mem-readings .dot { margin: 0 8px; color: var(--line); }
 .mem-char {
-  font-family: "Shippori Mincho", serif;
-  font-size: 4.6rem;
-  font-weight: 700;
+  /* hand-inked brush calligraphy, like a real sumi character */
+  font-family: "Yuji Boku", "Shippori Mincho", serif;
+  font-size: 5.2rem;
+  font-weight: 400;
   color: var(--ink);
   line-height: 0.9;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.35);

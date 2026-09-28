@@ -459,14 +459,26 @@ body {
 }
 .assoc-img,
 .assoc-emoji {
-  width: 210px;
-  height: 210px;
+  /* same footprint as the writing square on the left page */
+  width: 300px;
+  height: 300px;
   margin: 0 auto;
-  border-radius: 6px;
-  background: #fbf6e7;
-  border: 1px solid var(--paper-edge);
-  box-shadow: 0 6px 16px rgba(70, 50, 20, 0.2);
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  border-radius: 50%;
   object-fit: cover;
+  /* no hard frame — the picture fades out into a soft circle */
+  -webkit-mask-image: radial-gradient(
+    circle at 50% 50%,
+    #000 52%,
+    rgba(0, 0, 0, 0.4) 66%,
+    transparent 74%);
+  mask-image: radial-gradient(
+    circle at 50% 50%,
+    #000 52%,
+    rgba(0, 0, 0, 0.4) 66%,
+    transparent 74%);
 }
 .assoc-emoji {
   display: grid;
@@ -539,17 +551,6 @@ body {
   line-height: 1.7;
   color: var(--ink);
 }
-/* drop cap for an old-book feel */
-.memory-story p::first-letter {
-  font-family: "Shippori Mincho", serif;
-  font-size: 3.1rem;
-  font-weight: 700;
-  float: left;
-  line-height: 0.8;
-  padding: 4px 10px 0 0;
-  color: var(--seal);
-}
-
 .memory-foot { display: flex; flex-wrap: wrap; gap: 8px; padding-top: 16px; border-top: 1px solid var(--line); }
 .pill {
   font-size: 0.8rem;
@@ -587,4 +588,5 @@ body {
   .page-left { padding-right: 0; border-bottom: 1px solid var(--line); padding-bottom: 24px; }
   .page-right { padding-left: 0; padding-top: 24px; }
   .genko-grid { width: 260px; height: 260px; }
+  .assoc-img, .assoc-emoji { width: 260px; height: 260px; }
 }

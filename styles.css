@@ -258,9 +258,12 @@ body {
     0 12px 0 -2.5px #d2c6a3,
     0 14px 0 -3px #cbbe97,
     0 16px 0 -3.5px #c4b78c,
-    0 24px 26px -10px rgba(70, 52, 28, 0.42),
-    /* broad ambient cast shadow so the notebook is grounded on the desk */
-    0 46px 70px -22px rgba(18, 10, 3, 0.55),
+    /* tight contact shadow right under the page block */
+    0 26px 22px -14px rgba(40, 24, 8, 0.5),
+    /* mid cast shadow */
+    0 44px 52px -20px rgba(30, 18, 6, 0.55),
+    /* broad, soft ambient shadow so the notebook floats above the desk */
+    0 70px 100px -34px rgba(14, 8, 2, 0.62),
     /* top sheet stack (thinner) */
     0 -2px 0 0 #f7f1e2,
     0 -4px 0 -0.5px #f1e9d7,

@@ -28,15 +28,19 @@ html, body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* A soft, airy surface the book rests on */
+/* The notebook rests on a warm wooden desk (soft shoji light from the left) */
 body {
   min-height: 100vh;
-  background-color: var(--desk);
+  background-color: #3a2b1c;
   background-image:
-    radial-gradient(1200px 640px at 50% -12%, #f4eee2, transparent 62%),
-    radial-gradient(900px 900px at 100% 120%, rgba(220, 185, 179, 0.28), transparent 60%),
-    linear-gradient(180deg, #efe8da, #ddd3c0);
-  padding: 44px 20px 64px;
+    /* gentle vignette so the eye settles on the notebook */
+    radial-gradient(1300px 900px at 50% 44%, transparent 52%, rgba(28, 17, 7, 0.34) 100%),
+    url("assets/img/desk-bg.png");
+  background-repeat: no-repeat, no-repeat;
+  background-size: cover, cover;
+  background-position: center, center;
+  background-attachment: fixed, fixed;
+  padding: 60px 20px 84px;
 }
 
 /* ============================================================
@@ -52,8 +56,10 @@ body {
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.4) inset,
     0 0 0 1px rgba(120, 95, 55, 0.25),
-    0 26px 54px rgba(70, 52, 28, 0.28),
-    0 8px 18px rgba(70, 52, 28, 0.2);
+    /* grounded cast shadow on the wooden desk */
+    0 42px 80px rgba(18, 10, 3, 0.5),
+    0 18px 38px rgba(18, 10, 3, 0.42),
+    0 6px 14px rgba(18, 10, 3, 0.3);
   position: relative;
 }
 /* thin gilt line around the cover */

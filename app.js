@@ -32,7 +32,6 @@
     memOn: document.getElementById("memOn"),
     memKun: document.getElementById("memKun"),
     memChar: document.getElementById("memChar"),
-    memStory: document.getElementById("memStory"),
   };
 
   var writer = null;
@@ -130,7 +129,6 @@
     els.memOn.textContent = k.on;
     els.memKun.textContent = k.kun;
     els.memChar.textContent = k.char;
-    els.memStory.textContent = k.story;
   }
 
   /* ---------- Hanzi Writer setup ---------- */

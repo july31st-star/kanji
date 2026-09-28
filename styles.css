@@ -468,17 +468,23 @@ body {
   box-shadow: none;
   border-radius: 50%;
   object-fit: cover;
-  /* no hard frame — the picture fades out into a soft circle */
+  /* no hard frame — the picture melts gently into the page (long, soft feather) */
   -webkit-mask-image: radial-gradient(
-    circle at 50% 50%,
-    #000 52%,
-    rgba(0, 0, 0, 0.4) 66%,
-    transparent 74%);
+    circle at 50% 48%,
+    #000 8%,
+    rgba(0, 0, 0, 0.92) 30%,
+    rgba(0, 0, 0, 0.65) 46%,
+    rgba(0, 0, 0, 0.32) 60%,
+    rgba(0, 0, 0, 0.12) 70%,
+    transparent 80%);
   mask-image: radial-gradient(
-    circle at 50% 50%,
-    #000 52%,
-    rgba(0, 0, 0, 0.4) 66%,
-    transparent 74%);
+    circle at 50% 48%,
+    #000 8%,
+    rgba(0, 0, 0, 0.92) 30%,
+    rgba(0, 0, 0, 0.65) 46%,
+    rgba(0, 0, 0, 0.32) 60%,
+    rgba(0, 0, 0, 0.12) 70%,
+    transparent 80%);
 }
 .assoc-emoji {
   display: grid;

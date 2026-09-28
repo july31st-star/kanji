@@ -16,6 +16,8 @@
   --blush: #e7c9c4;
   --blush-2: #dcb9b3;
   --wash: #cfbca7;
+  --grid-red: rgba(198, 88, 84, 0.6);
+  --grid-guide: rgba(198, 88, 84, 0.32);
 }
 
 * { box-sizing: border-box; }
@@ -189,45 +191,61 @@ body {
 .section-label::before,
 .section-label::after { content: "❦"; color: var(--gold); margin: 0 12px; font-size: 0.9em; }
 
-.picker-wrap { margin-bottom: 30px; }
+.picker-wrap { margin-bottom: 34px; }
+/* One connected sheet of rice-paper practice grid (米字格) resting on the desk */
 .picker {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(76px, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(9, 1fr);
+  background: linear-gradient(180deg, #f6efdc, #eee4cc);
+  border: 1.5px solid var(--grid-red);
+  border-radius: 2px;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.45) inset,
+    0 14px 30px -12px rgba(18, 10, 3, 0.55);
+  overflow: hidden;
 }
 .tile {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 3px;
-  padding: 9px 6px 7px;
+  position: relative;
+  aspect-ratio: 1 / 1;
+  display: grid;
+  place-items: center;
   cursor: pointer;
-  /* little parchment chips resting on the desk */
-  background: linear-gradient(180deg, #f8f3e6, #efe5cf);
-  border: 1px solid rgba(120, 95, 55, 0.32);
-  border-radius: 3px;
-  box-shadow: 0 2px 5px rgba(20, 12, 4, 0.28), 0 1px 0 rgba(255, 255, 255, 0.5) inset;
-  transition: background 0.12s ease, transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s;
+  background-color: transparent;
+  border: 0;
+  /* shared cell walls form the connected grid */
+  border-right: 1px solid var(--grid-red);
+  border-bottom: 1px solid var(--grid-red);
+  /* 米字格 guides inside each cell: centre cross + both diagonals */
+  background-image:
+    linear-gradient(to right,
+      transparent calc(50% - 0.5px), var(--grid-guide) calc(50% - 0.5px),
+      var(--grid-guide) calc(50% + 0.5px), transparent calc(50% + 0.5px)),
+    linear-gradient(to bottom,
+      transparent calc(50% - 0.5px), var(--grid-guide) calc(50% - 0.5px),
+      var(--grid-guide) calc(50% + 0.5px), transparent calc(50% + 0.5px)),
+    linear-gradient(to bottom left,
+      transparent calc(50% - 0.4px), var(--grid-guide) calc(50% - 0.4px),
+      var(--grid-guide) calc(50% + 0.4px), transparent calc(50% + 0.4px)),
+    linear-gradient(to bottom right,
+      transparent calc(50% - 0.4px), var(--grid-guide) calc(50% - 0.4px),
+      var(--grid-guide) calc(50% + 0.4px), transparent calc(50% + 0.4px));
+  transition: background-color 0.12s ease;
 }
-.tile:hover {
-  background: linear-gradient(180deg, #fdf9ee, #f3ebd8);
-  transform: translateY(-2px);
-  box-shadow: 0 5px 12px rgba(20, 12, 4, 0.34), 0 1px 0 rgba(255, 255, 255, 0.6) inset;
-}
+.tile:hover { background-color: rgba(120, 96, 52, 0.12); }
 .tile-char {
+  position: relative;
+  z-index: 1;
   font-family: "Shippori Mincho", serif;
   font-weight: 700;
-  font-size: 1.9rem;
+  font-size: clamp(1.5rem, 3.4vw, 2rem);
   color: var(--ink);
   line-height: 1;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.35);
 }
-.tile-meaning { font-size: 0.72rem; color: var(--ink-soft); font-style: italic; }
-.tile.is-active {
-  background: var(--ink);
-  border-color: var(--ink);
-}
-.tile.is-active .tile-char { color: var(--paper); }
-.tile.is-active .tile-meaning { color: var(--paper-2); }
+/* meaning stays for screen readers / hover tooltip, hidden in the grid */
+.tile-meaning { display: none; }
+.tile.is-active { background-color: rgba(198, 88, 84, 0.16); }
+.tile.is-active .tile-char { color: var(--seal); }
 
 /* ============================================================
    The open-book spread
@@ -490,14 +508,12 @@ body {
 .mem-readings .rk { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); }
 .mem-readings .dot { margin: 0 8px; color: var(--line); }
 .mem-char {
-  /* hand-inked brush calligraphy, like a real sumi character */
-  font-family: "Yuji Mai", "Yuji Boku", "Shippori Mincho", serif;
-  font-size: 5.6rem;
-  font-weight: 400;
+  font-family: "Shippori Mincho", serif;
+  font-size: 4.6rem;
+  font-weight: 700;
   color: var(--ink);
   line-height: 0.9;
-  /* dry-brush sumi ink texture */
-  filter: url(#sumi);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.35);
 }
 
 .mem-caption {
@@ -560,10 +576,14 @@ body {
    ============================================================ */
 @media (max-width: 820px) {
   .book-inner { padding: 30px 26px 26px; }
+  .picker { grid-template-columns: repeat(6, 1fr); }
   .spread { grid-template-columns: 1fr; gap: 8px; }
   .spread::before { display: none; }
   .page-left { padding-right: 0; border-bottom: 1px solid var(--line); padding-bottom: 24px; }
   .page-right { padding-left: 0; padding-top: 24px; }
   .genko-grid { width: 260px; height: 260px; }
   .assoc-img, .assoc-emoji { width: 260px; height: 260px; }
+}
+@media (max-width: 520px) {
+  .picker { grid-template-columns: repeat(5, 1fr); }
 }

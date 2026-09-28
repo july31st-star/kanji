@@ -48,6 +48,7 @@
       var tile = document.createElement("button");
       tile.className = "tile";
       tile.setAttribute("aria-label", k.meaning);
+      tile.title = k.meaning;
       tile.innerHTML =
         '<span class="tile-char">' + k.char + "</span>" +
         '<span class="tile-meaning">' + k.meaning + "</span>";

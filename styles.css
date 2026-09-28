@@ -308,6 +308,28 @@ body {
   z-index: 6;
   will-change: transform, opacity, box-shadow;
 }
+/* backward turn: the leaf sits on the LEFT page and pivots on the spine at
+   its right edge (used by the drag-to-flip "previous" gesture) */
+.page-flip--back {
+  left: 0;
+  right: auto;
+  transform-origin: right center;
+  border-radius: 9px 2px 3px 13px;
+  background:
+    linear-gradient(270deg,
+      rgba(90, 65, 30, 0.16),
+      #f5eede 7%,
+      #fcf8ef 50%,
+      #efe7d3 100%);
+}
+
+/* pages invite a grab; controls keep their own cursors */
+.page { cursor: grab; }
+.controls, .speed, .btn, #speed, .btn:disabled { cursor: auto; }
+.btn:not(:disabled) { cursor: pointer; }
+body.flip-dragging { cursor: grabbing; user-select: none; }
+body.flip-dragging * { cursor: grabbing !important; }
+
 /* lighting/curl sheen + soft shadow that plays across the leaf */
 .page-flip::before {
   content: "";

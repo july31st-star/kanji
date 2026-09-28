@@ -218,14 +218,6 @@ body {
   /* shared cell walls form the connected grid */
   border-right: 1px solid var(--grid-red);
   border-bottom: 1px solid var(--grid-red);
-  /* 米字格 guide inside each cell: centre cross only */
-  background-image:
-    linear-gradient(to right,
-      transparent calc(50% - 0.5px), var(--grid-guide) calc(50% - 0.5px),
-      var(--grid-guide) calc(50% + 0.5px), transparent calc(50% + 0.5px)),
-    linear-gradient(to bottom,
-      transparent calc(50% - 0.5px), var(--grid-guide) calc(50% - 0.5px),
-      var(--grid-guide) calc(50% + 0.5px), transparent calc(50% + 0.5px));
   transition: background-color 0.12s ease;
 }
 .tile:hover { background-color: rgba(120, 96, 52, 0.12); }

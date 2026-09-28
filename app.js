@@ -114,7 +114,7 @@
     // association illustration: show the watercolor image if we have one,
     // otherwise fall back to the emoji.
     if (k.image) {
-      els.assocImg.src = k.image;
+      els.assocImg.src = k.image + "?e=2"; // cache-bust after removing seals
       els.assocImg.alt = "Cute illustration hiding the kanji for " + k.meaning;
       els.assocImg.hidden = false;
       els.assocEmoji.style.display = "none";

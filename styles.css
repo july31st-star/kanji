@@ -33,9 +33,9 @@ body {
   min-height: 100vh;
   background-color: #3a2b1c;
   background-image:
-    /* gentle vignette so the eye settles on the notebook */
-    radial-gradient(1300px 900px at 50% 44%, transparent 52%, rgba(28, 17, 7, 0.34) 100%),
-    url("assets/img/desk-bg.png");
+    /* soft vignette so the eye settles on the notebook */
+    radial-gradient(1400px 1000px at 50% 46%, transparent 58%, rgba(28, 17, 7, 0.22) 100%),
+    url("assets/img/desk-flatlay.png");
   background-repeat: no-repeat, no-repeat;
   background-size: cover, cover;
   background-position: center, center;
@@ -47,7 +47,7 @@ body {
    The book — leather cover wrapping the pages
    ============================================================ */
 .book {
-  max-width: 1000px;
+  max-width: 920px;
   margin: 0 auto;
   padding: 24px 14px;
   border-radius: 8px;

@@ -92,4 +92,39 @@ window.KANJI = [
     story:
       "Raindrops falling behind a window in the clouds — the four dots are the drops themselves.",
   },
+  {
+    char: "竹", meaning: "bamboo", strokes: 6, emoji: "🎋",
+    image: "assets/img/wc-take.png",
+    on: "チク", kun: "たけ",
+    story:
+      "Two bamboo stalks side by side, each with a leaf drooping from the top. The plant that bends but never breaks.",
+  },
+  {
+    char: "花", meaning: "flower", strokes: 7, emoji: "🌸",
+    image: "assets/img/wc-hana.png",
+    on: "カ", kun: "はな",
+    story:
+      "Grass on top of a changing form below — a plant that transforms into a blossom.",
+  },
+  {
+    char: "鳥", meaning: "bird", strokes: 11, emoji: "🐦",
+    image: "assets/img/wc-tori.png",
+    on: "チョウ", kun: "とり",
+    story:
+      "A long-tailed bird in profile — the body, the eye, and the four dots below for its feet and tail feathers.",
+  },
+  {
+    char: "魚", meaning: "fish", strokes: 11, emoji: "🐟",
+    image: "assets/img/wc-sakana.png",
+    on: "ギョ", kun: "さかな・うお",
+    story:
+      "A fish standing upright: the head on top, the body in the middle, and the fins fanning out as four dots at the tail.",
+  },
+  {
+    char: "馬", meaning: "horse", strokes: 10, emoji: "🐎",
+    image: "assets/img/wc-uma.png",
+    on: "バ", kun: "うま",
+    story:
+      "A horse seen from the side — the flowing mane on top, the body and legs below, mid-gallop.",
+  },
 ];

@@ -10,6 +10,7 @@
     "木": "Ki", "日": "Hi", "月": "Tsuki", "山": "Yama", "川": "Kawa",
     "田": "Ta", "口": "Kuchi", "人": "Hito", "火": "Hi", "水": "Mizu",
     "目": "Me", "手": "Te", "雨": "Ame",
+    "竹": "Take", "花": "Hana", "鳥": "Tori", "魚": "Sakana", "馬": "Uma",
   };
 
   var els = {

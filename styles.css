@@ -40,7 +40,9 @@ body {
     url("assets/img/desk-flatlay.png");
   background-repeat: no-repeat, no-repeat;
   background-size: cover, cover;
-  background-position: center, center;
+  /* anchor to the top so vertical window resizing only trims the (unseen)
+     bottom instead of re-cropping around the centre */
+  background-position: center top, center top;
   background-attachment: fixed, fixed;
   padding: 60px 20px 84px;
 }

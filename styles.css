@@ -77,27 +77,11 @@ body {
   background-image:
     radial-gradient(circle at 82% 90%, rgba(150, 120, 70, 0.08), transparent 34%),
     linear-gradient(180deg, rgba(255, 253, 246, 0.5), rgba(226, 210, 176, 0.12));
-  /* Stacked page edges give the paper block real thickness at the top and
-     bottom, so it reads like a full notebook rather than a single sheet. */
+  /* The container is just the surface that holds the notebook — keep it flat.
+     The stacked page-edge depth lives on the .spread below. */
   box-shadow:
     0 0 40px rgba(120, 95, 55, 0.10) inset,
-    0 1px 0 rgba(255, 255, 255, 0.5) inset,
-    /* bottom sheet stack (thicker — we look slightly down onto it) */
-    0 2px 0 0 #f2ebd7,
-    0 4px 0 -0.5px #ece4cd,
-    0 6px 0 -1px #e6ddc5,
-    0 8px 0 -1.5px #e0d6bb,
-    0 10px 0 -2px #d9ceaf,
-    0 12px 0 -2.5px #d2c6a3,
-    0 14px 0 -3px #cbbe97,
-    0 20px 22px -8px rgba(70, 52, 28, 0.40),
-    /* top sheet stack (thinner) */
-    0 -2px 0 0 #f6f0e0,
-    0 -4px 0 -0.5px #f0e8d5,
-    0 -6px 0 -1px #eae1cb,
-    0 -8px 0 -1.5px #e3dac1,
-    0 -10px 0 -2px #dcd2b6,
-    0 -14px 14px -8px rgba(70, 52, 28, 0.22);
+    0 1px 0 rgba(255, 255, 255, 0.5) inset;
 }
 /* a soft top/bottom shading on the paper so the block looks gently rounded */
 .book-inner::before {
@@ -283,6 +267,34 @@ body {
   grid-template-columns: 1fr 1fr;
   perspective: 2200px;
   perspective-origin: center;
+  /* The spread IS the notebook: a block of stacked pages. Give it its own
+     paper surface and real thickness at the top and bottom edges. */
+  padding: 22px 26px;
+  border-radius: 3px 3px 5px 5px;
+  background:
+    radial-gradient(circle at 80% 92%, rgba(150, 120, 70, 0.06), transparent 40%),
+    linear-gradient(180deg, #fdf9f0, #f6efdd);
+  box-shadow:
+    /* crisp top sheet + soft inner rounding */
+    0 1px 0 rgba(255, 255, 255, 0.65) inset,
+    0 0 26px rgba(120, 95, 55, 0.06) inset,
+    /* bottom sheet stack (thicker — we look slightly down onto the block) */
+    0 2px 0 0 #f3ecd9,
+    0 4px 0 -0.5px #ece4cd,
+    0 6px 0 -1px #e6ddc5,
+    0 8px 0 -1.5px #e0d6bb,
+    0 10px 0 -2px #d9ceaf,
+    0 12px 0 -2.5px #d2c6a3,
+    0 14px 0 -3px #cbbe97,
+    0 16px 0 -3.5px #c4b78c,
+    0 24px 26px -10px rgba(70, 52, 28, 0.42),
+    /* top sheet stack (thinner) */
+    0 -2px 0 0 #f7f1e2,
+    0 -4px 0 -0.5px #f1e9d7,
+    0 -6px 0 -1px #ebe2cd,
+    0 -8px 0 -1.5px #e4dbc2,
+    0 -10px 0 -2px #ddd3b7,
+    0 -14px 14px -9px rgba(70, 52, 28, 0.20);
 }
 
 /* the turning page (right leaf pivoting on the spine) */

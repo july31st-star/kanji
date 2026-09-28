@@ -51,8 +51,59 @@
   var active = null; // active kanji object
   var currentIndex = 0; // index of the kanji on the spread
   var speed = 1;
+  var STROKE_GAP = 360; // ms between strokes while animating a whole character
   var token = 0; // cancels in-flight animation chains
   var quizzing = false; // true while a tracing quiz is in progress
+
+  /* ---------- brush-on-paper sound ---------- */
+  var audioCtx = null;
+  function unlockAudio() {
+    try {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return;
+      if (!audioCtx) audioCtx = new AC();
+      if (audioCtx.state === "suspended") audioCtx.resume();
+    } catch (err) {}
+  }
+
+  // A short, quiet friction grain — dry ink brush on washi, varied per stroke.
+  function playBrushStroke() {
+    unlockAudio();
+    if (!audioCtx) return;
+    var ctx = audioCtx;
+    var now = ctx.currentTime;
+    var dur = 0.22 + Math.random() * 0.14;
+    var n = Math.floor(ctx.sampleRate * dur);
+    var buffer = ctx.createBuffer(1, n, ctx.sampleRate);
+    var data = buffer.getChannelData(0);
+    var brown = 0;
+    for (var i = 0; i < n; i++) {
+      brown += (Math.random() * 2 - 1) * 0.02;
+      brown *= 0.98;
+      var t = i / n;
+      // soft press, then a taper as the brush lifts
+      var env = Math.pow(t, 0.28) * Math.pow(1 - t, 1.55) * 5.2;
+      data[i] = brown * env;
+    }
+    var src = ctx.createBufferSource();
+    src.buffer = buffer;
+    var filter = ctx.createBiquadFilter();
+    filter.type = "bandpass";
+    filter.Q.value = 0.85;
+    var startF = 1800 + Math.random() * 900;
+    var endF = 650 + Math.random() * 280;
+    filter.frequency.setValueAtTime(startF, now);
+    filter.frequency.exponentialRampToValueAtTime(endF, now + dur);
+    var gain = ctx.createGain();
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.exponentialRampToValueAtTime(0.055, now + 0.018);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + dur);
+    src.connect(filter);
+    filter.connect(gain);
+    gain.connect(ctx.destination);
+    src.start(now);
+    src.stop(now + dur + 0.02);
+  }
 
   /* ---------- build the picker ---------- */
   function buildPicker() {
@@ -207,11 +258,11 @@
       padding: 14,
       showCharacter: false,
       showOutline: true,
-      strokeColor: "#181510",
+      strokeColor: "#000000",
       outlineColor: "#cabfa0",
       drawingColor: "#a23b2d",
       strokeAnimationSpeed: speed,
-      delayBetweenStrokes: 360,
+      delayBetweenStrokes: STROKE_GAP,
       strokeFadeDuration: 0,
     });
     updateCounter();
@@ -229,6 +280,7 @@
   function nextStroke() {
     if (!writer || current >= total) return;
     var idx = current;
+    playBrushStroke();
     writer.animateStroke(idx);
     current += 1;
     updateCounter();
@@ -260,16 +312,29 @@
 
   function animateAll() {
     if (!writer) return;
-    token++;
+    var my = ++token;
     writer.hideCharacter({ duration: 0 });
     current = 0;
     updateCounter();
-    writer.animateCharacter({
-      onComplete: function () {
+    var i = 0;
+    (function step() {
+      if (my !== token || !writer) return;
+      if (i >= total) {
         current = total;
         updateCounter();
-      },
-    });
+        return;
+      }
+      playBrushStroke();
+      writer.animateStroke(i, {
+        onComplete: function () {
+          if (my !== token) return;
+          i += 1;
+          current = i;
+          updateCounter();
+          if (i < total) setTimeout(step, STROKE_GAP);
+        },
+      });
+    })();
   }
 
   function setPracticing(on) {
@@ -502,6 +567,8 @@
   els.btnReset.addEventListener("click", reset);
   if (els.btnSpeak) els.btnSpeak.addEventListener("click", speakKanji);
   if (window.speechSynthesis) window.speechSynthesis.getVoices();
+  document.addEventListener("pointerdown", unlockAudio, { passive: true });
+  document.addEventListener("keydown", unlockAudio);
   if (els.grid) {
     els.grid.addEventListener("pointerenter", moveBrushTip);
     els.grid.addEventListener("pointermove", moveBrushTip);

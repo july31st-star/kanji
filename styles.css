@@ -52,9 +52,32 @@ body {
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.4) inset,
     0 0 0 1px rgba(120, 95, 55, 0.25),
-    0 26px 54px rgba(70, 52, 28, 0.28),
-    0 8px 18px rgba(70, 52, 28, 0.2);
+    0 34px 58px rgba(70, 52, 28, 0.30),
+    0 12px 22px rgba(70, 52, 28, 0.22);
   position: relative;
+}
+/* the thick block of stacked pages peeking above and below the cover */
+.book::after {
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  top: -16px;
+  bottom: -16px;
+  z-index: -1;
+  border-radius: 9px;
+  background:
+    /* top edge: shade receding toward the back, over fine sheet lines */
+    linear-gradient(to top, rgba(60, 45, 20, 0) 45%, rgba(60, 45, 20, 0.32))
+      top / 100% 16px no-repeat,
+    repeating-linear-gradient(to top, #f4eddb 0 1.6px, #d9ccb0 1.6px 3.2px)
+      top / 100% 16px no-repeat,
+    /* bottom edge */
+    linear-gradient(to bottom, rgba(60, 45, 20, 0) 45%, rgba(60, 45, 20, 0.32))
+      bottom / 100% 16px no-repeat,
+    repeating-linear-gradient(to bottom, #f4eddb 0 1.6px, #d9ccb0 1.6px 3.2px)
+      bottom / 100% 16px no-repeat;
+  box-shadow: 0 0 0 1px rgba(120, 95, 55, 0.22);
 }
 /* thin gilt line around the cover */
 .book::before {

@@ -2,7 +2,16 @@
 (function () {
   "use strict";
 
-  var SIZE = 300; // px of the writing square (matches CSS)
+  var SIZE = 300; // desktop writing-square size (matches CSS)
+  var stackedMq =
+    window.matchMedia && window.matchMedia("(max-width: 820px)");
+  function isStacked() {
+    return !!(stackedMq && stackedMq.matches);
+  }
+  function writerSize() {
+    if (els.grid && els.grid.clientWidth) return els.grid.clientWidth;
+    return isStacked() ? 260 : SIZE;
+  }
   var kanji = window.KANJI || [];
 
   // romaji for the elegant caption line under each character
@@ -16,9 +25,10 @@
   var els = {
     picker: document.getElementById("picker"),
     target: document.getElementById("target"),
+    grid: document.getElementById("grid"),
+    brushTip: document.getElementById("brushTip"),
     now: document.getElementById("strokeNow"),
     total: document.getElementById("strokeTotal"),
-    speed: document.getElementById("speed"),
     btnPrev: document.getElementById("btnPrev"),
     btnNext: document.getElementById("btnNext"),
     btnPlay: document.getElementById("btnPlay"),
@@ -26,9 +36,10 @@
     btnReset: document.getElementById("btnReset"),
     assocImg: document.getElementById("assocImg"),
     assocEmoji: document.getElementById("assocEmoji"),
-    memCaption: document.getElementById("memCaption"),
     flip: document.querySelector(".page-flip"),
     memMeaning: document.getElementById("memMeaning"),
+    memRomaji: document.getElementById("memRomaji"),
+    btnSpeak: document.getElementById("btnSpeak"),
     memOn: document.getElementById("memOn"),
     memKun: document.getElementById("memKun"),
     memChar: document.getElementById("memChar"),
@@ -61,6 +72,7 @@
   }
 
   var flipTimers = [];
+  var flipDone = null;
   var reduceMotion =
     window.matchMedia &&
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -68,6 +80,10 @@
   function clearFlipTimers() {
     flipTimers.forEach(clearTimeout);
     flipTimers = [];
+    if (flipDone && els.flip) {
+      els.flip.removeEventListener("animationend", flipDone);
+      flipDone = null;
+    }
   }
 
   // ----- content application for one page-side -----
@@ -79,7 +95,11 @@
   }
   // right page: illustration + meaning; left page: the writing grid
   function applyRight(k) { active = k; updateMemory(k); }
-  function applyLeft(k) { active = k; total = k.strokes; loadWriter(k.char); }
+  function applyLeft(k, shouldAnimate) {
+    active = k;
+    total = k.strokes;
+    loadWriter(k.char, shouldAnimate);
+  }
 
   // clear any inline styles/classes left on the turning leaf by a manual drag
   function resetLeaf() {
@@ -95,9 +115,9 @@
     setActiveTile(i);
     var k = kanji[i];
 
-    if (skipFlip || reduceMotion || !els.flip) {
+    if (skipFlip || reduceMotion || !els.flip || isStacked()) {
       applyRight(k);
-      applyLeft(k);
+      applyLeft(k, true);
       currentIndex = i;
       return;
     }
@@ -116,18 +136,22 @@
     flipTimers.push(setTimeout(function () { applyLeft(k); }, 720));
     currentIndex = i;
 
-    var done = function () {
+    flipDone = function (e) {
+      if (e && e.animationName && e.animationName !== "page-turn") return;
       els.flip.classList.remove("is-flipping");
-      els.flip.removeEventListener("animationend", done);
+      els.flip.removeEventListener("animationend", flipDone);
+      flipDone = null;
+      animateAll();
     };
-    els.flip.addEventListener("animationend", done);
+    els.flip.addEventListener("animationend", flipDone);
   }
 
   function updateMemory(k) {
     // association illustration: show the watercolor image if we have one,
     // otherwise fall back to the emoji.
     if (k.image) {
-      els.assocImg.src = k.image + "?e=2"; // cache-bust after removing seals
+      els.assocImg.src = k.image + "?e=5";
+      els.assocImg.draggable = false;
       els.assocImg.alt = "Cute illustration hiding the kanji for " + k.meaning;
       els.assocImg.hidden = false;
       els.assocEmoji.style.display = "none";
@@ -136,21 +160,50 @@
       els.assocEmoji.textContent = k.emoji;
       els.assocEmoji.style.display = "grid";
     }
-    els.memCaption.textContent = (ROMAJI[k.char] || "") + " · " + k.meaning;
     els.memMeaning.textContent = k.meaning;
+    els.memRomaji.textContent = ROMAJI[k.char] || "";
     els.memOn.textContent = k.on;
     els.memKun.textContent = k.kun;
     els.memChar.textContent = k.char;
   }
 
+  function spokenReading(k) {
+    if (!k) return "";
+    if (k.kun) return k.kun.split("・")[0].trim();
+    if (k.on) return k.on.split("・")[0].trim();
+    return k.char;
+  }
+
+  function speakKanji() {
+    if (!active || !window.speechSynthesis) return;
+    window.speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(spokenReading(active));
+    u.lang = "ja-JP";
+    u.rate = 0.88;
+    var voices = window.speechSynthesis.getVoices();
+    var ja = null;
+    for (var i = 0; i < voices.length; i++) {
+      if (voices[i].lang && voices[i].lang.toLowerCase().indexOf("ja") === 0) {
+        ja = voices[i];
+        if (voices[i].localService) break;
+      }
+    }
+    if (ja) u.voice = ja;
+    window.speechSynthesis.speak(u);
+  }
+
   /* ---------- Hanzi Writer setup ---------- */
-  function loadWriter(char) {
+  function loadWriter(char, shouldAnimate) {
     token++;
+    if (writer && writer.cancelQuiz) {
+      try { writer.cancelQuiz(); } catch (err) {}
+    }
+    setPracticing(false);
     els.target.innerHTML = "";
     current = 0;
     writer = HanziWriter.create(els.target, char, {
-      width: SIZE,
-      height: SIZE,
+      width: writerSize(),
+      height: writerSize(),
       padding: 14,
       showCharacter: false,
       showOutline: true,
@@ -162,6 +215,7 @@
       strokeFadeDuration: 0,
     });
     updateCounter();
+    if (shouldAnimate) animateAll();
   }
 
   function updateCounter() {
@@ -218,39 +272,64 @@
     });
   }
 
+  function setPracticing(on) {
+    quizzing = !!on;
+    if (els.grid) els.grid.classList.toggle("is-practicing", quizzing);
+    if (!quizzing && els.brushTip) {
+      els.brushTip.hidden = true;
+    }
+    if (quizzing) {
+      requestAnimationFrame(sizeBrushTip);
+    }
+  }
+
+  // Match the on-screen thickness of a Hanzi Writer stroke (stroke-width 200
+  // in the 1024-unit character space, scaled by the SVG's CTM).
+  function sizeBrushTip() {
+    if (!els.brushTip || !els.grid) return;
+    var path = els.target.querySelector("svg path[stroke-width]");
+    var px = 22;
+    if (path) {
+      var ctm = path.getScreenCTM();
+      var sw = parseFloat(path.getAttribute("stroke-width")) || 200;
+      if (ctm) px = Math.round(sw * Math.abs(ctm.a) * 0.4);
+    }
+    px = Math.max(12, Math.min(px, 28));
+    els.grid.style.setProperty("--brush", px + "px");
+  }
+
+  function moveBrushTip(e) {
+    if (!quizzing || !els.brushTip || !els.grid) return;
+    var rect = els.grid.getBoundingClientRect();
+    els.brushTip.hidden = false;
+    els.brushTip.style.left = e.clientX - rect.left + "px";
+    els.brushTip.style.top = e.clientY - rect.top + "px";
+  }
+
   function practice() {
     if (!writer) return;
     token++;
     current = 0;
     updateCounter();
-    quizzing = true;
     writer.quiz({
       showHintAfterMisses: 2,
       onComplete: function () {
-        quizzing = false;
+        setPracticing(false);
         current = total;
         updateCounter();
       },
     });
+    setPracticing(true);
   }
 
   function reset() {
     if (!writer) return;
     token++;
-    quizzing = false;
+    setPracticing(false);
     if (writer.cancelQuiz) writer.cancelQuiz();
     writer.hideCharacter({ duration: 0 });
     current = 0;
     updateCounter();
-  }
-
-  /* ---------- speed changes require a rebuild ---------- */
-  function changeSpeed(v) {
-    speed = v;
-    if (!active) return;
-    var restore = current;
-    loadWriter(active.char);
-    if (restore > 0) goTo(restore);
   }
 
   /* ---------- drag to flip the page ---------- */
@@ -294,17 +373,24 @@
     }
 
     function onDown(e) {
-      if (drag || quizzing) return;
+      if (drag || isStacked()) return;
       if (e.pointerType === "mouse" && e.button !== 0) return;
       if (els.flip.classList.contains("is-flipping")) return;
       // never hijack the controls, slider, tiles, or links
-      if (e.target.closest("button, input, a, label, .controls, .speed, .picker")) return;
+      if (e.target.closest("button, input, a, label, .controls, .stroke-nav, .picker")) return;
+      // keep the writing square for tracing while practicing
+      if (quizzing && e.target.closest(".genko-grid")) return;
       var dir = e.target.closest(".page-right")
         ? "next"
         : e.target.closest(".page-left")
         ? "prev"
         : null;
       if (!dir) return;
+      // the watercolor is an <img>, so block the browser's native image-drag
+      if (e.target.closest("img, .assoc") && e.cancelable) e.preventDefault();
+      if (spread.setPointerCapture) {
+        try { spread.setPointerCapture(e.pointerId); } catch (err) {}
+      }
       drag = {
         dir: dir,
         startX: e.clientX,
@@ -381,6 +467,7 @@
 
         if (commit) {
           currentIndex = d.target;
+          animateAll();
         } else {
           // undo any preview that showed the destination
           if (d.rightChanged) applyRight(kanji[currentIndex]);
@@ -401,6 +488,7 @@
     }
 
     spread.addEventListener("pointerdown", onDown);
+    spread.addEventListener("dragstart", function (e) { e.preventDefault(); });
     window.addEventListener("pointermove", onMove, { passive: false });
     window.addEventListener("pointerup", onUp);
     window.addEventListener("pointercancel", onUp);
@@ -412,11 +500,32 @@
   els.btnPlay.addEventListener("click", animateAll);
   els.btnQuiz.addEventListener("click", practice);
   els.btnReset.addEventListener("click", reset);
-  els.speed.addEventListener("input", function () {
-    changeSpeed(parseFloat(els.speed.value));
-  });
+  if (els.btnSpeak) els.btnSpeak.addEventListener("click", speakKanji);
+  if (window.speechSynthesis) window.speechSynthesis.getVoices();
+  if (els.grid) {
+    els.grid.addEventListener("pointerenter", moveBrushTip);
+    els.grid.addEventListener("pointermove", moveBrushTip);
+    els.grid.addEventListener("pointerleave", function () {
+      if (els.brushTip) els.brushTip.hidden = true;
+    });
+  }
 
   buildPicker();
   select(0, true);
   initDragFlip();
+
+  function onStackChange() {
+    resetLeaf();
+    clearFlipTimers();
+    if (els.flip) els.flip.classList.remove("is-flipping");
+    document.body.classList.remove("flip-dragging");
+    if (!active) return;
+    var restore = current;
+    loadWriter(active.char);
+    if (restore > 0) goTo(restore);
+  }
+  if (stackedMq) {
+    if (stackedMq.addEventListener) stackedMq.addEventListener("change", onStackChange);
+    else stackedMq.addListener(onStackChange);
+  }
 })();

@@ -207,28 +207,25 @@ body {
 .tile {
   position: relative;
   aspect-ratio: 1 / 1;
-  display: grid;
-  place-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
   cursor: pointer;
   background-color: transparent;
   border: 0;
   /* shared cell walls form the connected grid */
   border-right: 1px solid var(--grid-red);
   border-bottom: 1px solid var(--grid-red);
-  /* 米字格 guides inside each cell: centre cross + both diagonals */
+  /* 米字格 guide inside each cell: centre cross only */
   background-image:
     linear-gradient(to right,
       transparent calc(50% - 0.5px), var(--grid-guide) calc(50% - 0.5px),
       var(--grid-guide) calc(50% + 0.5px), transparent calc(50% + 0.5px)),
     linear-gradient(to bottom,
       transparent calc(50% - 0.5px), var(--grid-guide) calc(50% - 0.5px),
-      var(--grid-guide) calc(50% + 0.5px), transparent calc(50% + 0.5px)),
-    linear-gradient(to bottom left,
-      transparent calc(50% - 0.4px), var(--grid-guide) calc(50% - 0.4px),
-      var(--grid-guide) calc(50% + 0.4px), transparent calc(50% + 0.4px)),
-    linear-gradient(to bottom right,
-      transparent calc(50% - 0.4px), var(--grid-guide) calc(50% - 0.4px),
-      var(--grid-guide) calc(50% + 0.4px), transparent calc(50% + 0.4px));
+      var(--grid-guide) calc(50% + 0.5px), transparent calc(50% + 0.5px));
   transition: background-color 0.12s ease;
 }
 .tile:hover { background-color: rgba(120, 96, 52, 0.12); }
@@ -242,10 +239,17 @@ body {
   line-height: 1;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.35);
 }
-/* meaning stays for screen readers / hover tooltip, hidden in the grid */
-.tile-meaning { display: none; }
+.tile-meaning {
+  position: relative;
+  z-index: 1;
+  font-size: 0.68rem;
+  font-style: italic;
+  line-height: 1;
+  color: var(--ink-soft);
+}
 .tile.is-active { background-color: rgba(198, 88, 84, 0.16); }
 .tile.is-active .tile-char { color: var(--seal); }
+.tile.is-active .tile-meaning { color: var(--seal); opacity: 0.8; }
 
 /* ============================================================
    The open-book spread

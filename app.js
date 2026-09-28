@@ -26,7 +26,6 @@
     btnReset: document.getElementById("btnReset"),
     assocImg: document.getElementById("assocImg"),
     assocEmoji: document.getElementById("assocEmoji"),
-    assocMeaning: document.getElementById("assocMeaning"),
     memCaption: document.getElementById("memCaption"),
     flip: document.querySelector(".page-flip"),
     memMeaning: document.getElementById("memMeaning"),
@@ -125,7 +124,6 @@
       els.assocEmoji.textContent = k.emoji;
       els.assocEmoji.style.display = "grid";
     }
-    els.assocMeaning.textContent = k.meaning;
     els.memCaption.textContent = (ROMAJI[k.char] || "") + " · " + k.meaning;
     els.memMeaning.textContent = k.meaning;
     els.memOn.textContent = k.on;

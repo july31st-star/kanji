@@ -280,13 +280,8 @@ body {
     0 44px 52px -20px rgba(30, 18, 6, 0.55),
     /* broad, soft ambient shadow so the notebook floats above the desk */
     0 70px 100px -34px rgba(14, 8, 2, 0.62),
-    /* top sheet stack (thinner) */
-    0 -2px 0 0 #f7f1e2,
-    0 -4px 0 -0.5px #f1e9d7,
-    0 -6px 0 -1px #ebe2cd,
-    0 -8px 0 -1.5px #e4dbc2,
-    0 -10px 0 -2px #ddd3b7,
-    0 -14px 14px -9px rgba(70, 52, 28, 0.20);
+    /* a soft shadow tucked under the top edge (no visible page stack here) */
+    0 -3px 10px -6px rgba(70, 52, 28, 0.22);
 }
 
 /* the turning page (right leaf pivoting on the spine) */
@@ -477,13 +472,6 @@ body {
   font-size: 6rem;
   line-height: 1;
 }
-.assoc figcaption {
-  margin-top: 10px;
-  font-style: italic;
-  font-size: 0.95rem;
-  color: var(--gold);
-}
-.assoc figcaption span { text-transform: capitalize; }
 
 /* ---------- right page: meaning & memory ---------- */
 .memory-head {

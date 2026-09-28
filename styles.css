@@ -466,25 +466,18 @@ body {
   background: transparent;
   border: none;
   box-shadow: none;
-  border-radius: 50%;
+  border-radius: 4px;
   object-fit: cover;
-  /* no hard frame — the picture melts gently into the page (long, soft feather) */
-  -webkit-mask-image: radial-gradient(
-    circle at 50% 48%,
-    #000 8%,
-    rgba(0, 0, 0, 0.92) 30%,
-    rgba(0, 0, 0, 0.65) 46%,
-    rgba(0, 0, 0, 0.32) 60%,
-    rgba(0, 0, 0, 0.12) 70%,
-    transparent 80%);
-  mask-image: radial-gradient(
-    circle at 50% 48%,
-    #000 8%,
-    rgba(0, 0, 0, 0.92) 30%,
-    rgba(0, 0, 0, 0.65) 46%,
-    rgba(0, 0, 0, 0.32) 60%,
-    rgba(0, 0, 0, 0.12) 70%,
-    transparent 80%);
+  /* no hard frame — feather all four edges of the square so it melts into the
+     page (intersect a horizontal + vertical soft gradient) */
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0, #000 20%, #000 80%, transparent 100%),
+    linear-gradient(to bottom, transparent 0, #000 20%, #000 80%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent 0, #000 20%, #000 80%, transparent 100%),
+    linear-gradient(to bottom, transparent 0, #000 20%, #000 80%, transparent 100%);
+  mask-composite: intersect;
 }
 .assoc-emoji {
   display: grid;

@@ -287,8 +287,9 @@ body {
 /* the turning page (right leaf pivoting on the spine) */
 .page-flip {
   position: absolute;
-  top: -8px;
-  bottom: -8px;
+  /* flush with the spread's top edge; only the bottom carries page-stack depth */
+  top: 0;
+  bottom: -6px;
   left: 50%;
   width: 50%;
   transform-origin: left center;
@@ -446,9 +447,9 @@ body {
 }
 .assoc-img,
 .assoc-emoji {
-  /* same footprint as the writing square on the left page */
-  width: 300px;
-  height: 300px;
+  /* a touch larger than the writing square now the caption is gone */
+  width: 344px;
+  height: 344px;
   margin: 0 auto;
   background: transparent;
   border: none;
@@ -568,7 +569,7 @@ body {
   .page-left { padding-right: 0; border-bottom: 1px solid var(--line); padding-bottom: 24px; }
   .page-right { padding-left: 0; padding-top: 24px; }
   .genko-grid { width: 260px; height: 260px; }
-  .assoc-img, .assoc-emoji { width: 260px; height: 260px; }
+  .assoc-img, .assoc-emoji { width: 300px; height: 300px; }
 }
 @media (max-width: 520px) {
   .picker { grid-template-columns: repeat(5, 1fr); }

@@ -45,39 +45,16 @@ body {
 .book {
   max-width: 1000px;
   margin: 0 auto;
-  padding: 14px;
+  padding: 24px 14px;
   border-radius: 8px;
   background:
     linear-gradient(160deg, var(--cover), var(--cover-2));
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.4) inset,
     0 0 0 1px rgba(120, 95, 55, 0.25),
-    0 34px 58px rgba(70, 52, 28, 0.30),
-    0 12px 22px rgba(70, 52, 28, 0.22);
+    0 26px 54px rgba(70, 52, 28, 0.28),
+    0 8px 18px rgba(70, 52, 28, 0.2);
   position: relative;
-}
-/* the thick block of stacked pages peeking above and below the cover */
-.book::after {
-  content: "";
-  position: absolute;
-  left: 12px;
-  right: 12px;
-  top: -16px;
-  bottom: -16px;
-  z-index: -1;
-  border-radius: 9px;
-  background:
-    /* top edge: shade receding toward the back, over fine sheet lines */
-    linear-gradient(to top, rgba(60, 45, 20, 0) 45%, rgba(60, 45, 20, 0.32))
-      top / 100% 16px no-repeat,
-    repeating-linear-gradient(to top, #f4eddb 0 1.6px, #d9ccb0 1.6px 3.2px)
-      top / 100% 16px no-repeat,
-    /* bottom edge */
-    linear-gradient(to bottom, rgba(60, 45, 20, 0) 45%, rgba(60, 45, 20, 0.32))
-      bottom / 100% 16px no-repeat,
-    repeating-linear-gradient(to bottom, #f4eddb 0 1.6px, #d9ccb0 1.6px 3.2px)
-      bottom / 100% 16px no-repeat;
-  box-shadow: 0 0 0 1px rgba(120, 95, 55, 0.22);
 }
 /* thin gilt line around the cover */
 .book::before {
@@ -100,9 +77,39 @@ body {
   background-image:
     radial-gradient(circle at 82% 90%, rgba(150, 120, 70, 0.08), transparent 34%),
     linear-gradient(180deg, rgba(255, 253, 246, 0.5), rgba(226, 210, 176, 0.12));
+  /* Stacked page edges give the paper block real thickness at the top and
+     bottom, so it reads like a full notebook rather than a single sheet. */
   box-shadow:
     0 0 40px rgba(120, 95, 55, 0.10) inset,
-    0 1px 0 rgba(255, 255, 255, 0.5) inset;
+    0 1px 0 rgba(255, 255, 255, 0.5) inset,
+    /* bottom sheet stack (thicker — we look slightly down onto it) */
+    0 2px 0 0 #f2ebd7,
+    0 4px 0 -0.5px #ece4cd,
+    0 6px 0 -1px #e6ddc5,
+    0 8px 0 -1.5px #e0d6bb,
+    0 10px 0 -2px #d9ceaf,
+    0 12px 0 -2.5px #d2c6a3,
+    0 14px 0 -3px #cbbe97,
+    0 20px 22px -8px rgba(70, 52, 28, 0.40),
+    /* top sheet stack (thinner) */
+    0 -2px 0 0 #f6f0e0,
+    0 -4px 0 -0.5px #f0e8d5,
+    0 -6px 0 -1px #eae1cb,
+    0 -8px 0 -1.5px #e3dac1,
+    0 -10px 0 -2px #dcd2b6,
+    0 -14px 14px -8px rgba(70, 52, 28, 0.22);
+}
+/* a soft top/bottom shading on the paper so the block looks gently rounded */
+.book-inner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 2;
+  background:
+    linear-gradient(180deg, rgba(120, 96, 52, 0.10), transparent 5%, transparent 95%, rgba(120, 96, 52, 0.12));
+  mix-blend-mode: multiply;
 }
 /* faint horizontal aging lines */
 .book-inner::after {
